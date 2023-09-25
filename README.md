@@ -14,11 +14,18 @@ cd web-scraper-service
 
 python -m venv .venv
 
+
+# If using venv (https://docs.python.org/3/library/venv.html)
 # For MacOS
 source .venv/bin/activate
-
 # For Windows
 ./venv/Scripts/activate
+
+
+# If using pipenv (https://pipenv.pypa.io/en/latest/)
+pipenv shell
+
+pipenv install -r requirements.txt
 
 
 # Run the server
