@@ -1,8 +1,23 @@
 from fastapi import FastAPI, status
 from fastapi.responses import JSONResponse
+from fastapi_utils.tasks import repeat_every
 from lib.scraper_lib import exec_newsdata_scrape
 
 app = FastAPI()
+
+"""
+  Initialize repeated-task (daily) to
+  execute web scraping function
+  and generate CSV
+"""
+@app.on_event('startup')
+@repeat_every(seconds=30)
+def get_daily_news():
+  try:
+    exec_newsdata_scrape()
+    print('SUCCESSFULLY_SCRAPED_DATA')
+  except:
+    print('FAILED_TO_SCRAPED_DATA')
 
 @app.get('/')
 def index():
