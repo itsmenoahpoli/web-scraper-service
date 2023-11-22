@@ -10,14 +10,14 @@ app = FastAPI()
   execute web scraping function
   and generate CSV
 """
-@app.on_event('startup')
-@repeat_every(seconds=30)
-def get_daily_news():
-  try:
-    exec_newsdata_scrape()
-    print('SUCCESSFULLY_SCRAPED_DATA')
-  except:
-    print('FAILED_TO_SCRAPED_DATA')
+# @app.on_event('startup')
+# @repeat_every(seconds=30)
+# def get_daily_news():
+#   try:
+#     exec_newsdata_scrape()
+#     print('SUCCESSFULLY_SCRAPED_DATA')
+#   except:
+#     print('FAILED_TO_SCRAPED_DATA')
 
 @app.get('/')
 def index():
@@ -39,10 +39,11 @@ def exec_scrape():
         "message": "TASK_SUCCEFFSULLY_EXECUTED"
       }
     )
-  except:
+  except Exception as e:
     return JSONResponse(
       status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
       content={
-        "message": "TASK_FAILED_TO_EXECUTE"
+        "message": "TASK_FAILED_TO_EXECUTE",
+        "error": e
       }
     )

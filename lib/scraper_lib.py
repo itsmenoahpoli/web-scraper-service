@@ -9,7 +9,7 @@ def create_filename(name, path = './scraped_data'):
   if not os.path.exists(path):
     os.makedirs(path)
 
-  return f"{path}/{date.today()}_{time.time()}-{name}.csv"
+  return f"{path}/{date.today()}-{name}.csv"
 
 def scrape_bbc_data():
   url = 'https://www.bbc.co.uk/news'
@@ -58,3 +58,67 @@ def scrape_newsinfo_data():
 def exec_newsdata_scrape():
   scrape_bbc_data()
   scrape_newsinfo_data()
+
+  # Get scraped data from csv files
+  bbc_news_data = []
+  newsinfo_data = []
+
+  # Loop bbc_news data csv file
+  with open(f"./scraped_data/{date.today()}-bbc_news.csv") as bbcnewsCsv:
+    csv_reader = csv.reader(bbcnewsCsv, delimiter=',')
+    line_count = 0
+
+    bbc_cols = None
+    newsinfo_cols = None
+
+    for row in csv_reader:
+      if line_count == 0:
+        line_count += 1
+        bbc_cols = row
+
+      else:
+        line_count += 1
+        bbc_news_data.append({
+          bbc_cols[0].lower(): row[0],
+          bbc_cols[1].lower(): row[1],
+          bbc_cols[2].lower(): row[2],
+          bbc_cols[3].lower(): row[3]
+        })
+
+  # Loop bbc_news data csv file
+  with open(f"./scraped_data/{date.today()}-newsinfoinq_news.csv") as newsinfoCsv:
+    csv_reader = csv.reader(newsinfoCsv, delimiter=',')
+    line_count = 0
+
+    bbc_cols = None
+
+    for row in csv_reader:
+      if line_count == 0:
+        line_count += 1
+        newsinfo_cols = row
+
+      else:
+        line_count += 1
+        newsinfo_data.append({
+          newsinfo_cols[0].lower(): row[0],
+          newsinfo_cols[1].lower(): row[1],
+          newsinfo_cols[2].lower(): row[2],
+          newsinfo_cols[3].lower(): row[3]
+        })
+
+  # Prepare http request for news dashboard API
+  data = dict({
+    "bbc_news": bbc_news_data,
+    "newsinfo_news": newsinfo_data
+  })
+  
+  response = requests.post('http://localhost:6565/api/v1/news/insert', data=data,
+    headers={
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    }
+  )
+
+  print(response)
+
+
