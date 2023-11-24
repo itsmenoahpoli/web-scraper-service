@@ -1,7 +1,6 @@
 import os
 import csv
 import requests
-import time
 from datetime import date
 from bs4 import BeautifulSoup
 
@@ -78,12 +77,12 @@ def exec_newsdata_scrape():
 
       else:
         line_count += 1
-        bbc_news_data.append({
+        bbc_news_data.append(dict({
           bbc_cols[0].lower(): row[0],
           bbc_cols[1].lower(): row[1],
           bbc_cols[2].lower(): row[2],
           bbc_cols[3].lower(): row[3]
-        })
+        }))
 
   # Loop bbc_news data csv file
   with open(f"./scraped_data/{date.today()}-newsinfoinq_news.csv") as newsinfoCsv:
@@ -99,26 +98,26 @@ def exec_newsdata_scrape():
 
       else:
         line_count += 1
-        newsinfo_data.append({
+        newsinfo_data.append(dict({
           newsinfo_cols[0].lower(): row[0],
           newsinfo_cols[1].lower(): row[1],
           newsinfo_cols[2].lower(): row[2],
           newsinfo_cols[3].lower(): row[3]
-        })
+        }))
 
   # Prepare http request for news dashboard API
-  data = dict({
+  data = {
     "bbc_news": bbc_news_data,
     "newsinfo_news": newsinfo_data
-  })
-  
-  response = requests.post('http://localhost:6565/api/v1/news/insert', data=data,
-    headers={
-      "Content-Type": "application/json",
-      "Accept": "application/json"
-    }
-  )
+  }
 
-  print(response)
+  headers = {'Content-Type': 'application/json'}
+  
+  response = requests.post('http://localhost:6565/api/v1/news/insert', json=data, headers=headers)
+
+  if response.status_code == "200":
+    return 'SUCCESS'
+  else:
+    return 'FAILED'
 
 
