@@ -15,10 +15,14 @@ app = FastAPI()
 @repeat_every(seconds=60)
 def get_daily_news():
   try:
-    exec_newsdata_scrape()
-    print('SUCCESSFULLY_SCRAPED_DATA')
+    task = exec_newsdata_scrape()
+
+    if task == "FAILED":
+      print('FAILED_TO_SCRAPED_DATA')
+    else:
+      print('SUCCESSFULLY_SCRAPED_DATA')
   except:
-    print('FAILED_TO_SCRAPED_DATA')
+    print('SOMETHING_WENT_WRONG')
 
 @app.get('/')
 def index():
