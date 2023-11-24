@@ -11,7 +11,8 @@ app = FastAPI()
   and generate CSV
 """
 @app.on_event('startup')
-@repeat_every(seconds=86400)
+# @repeat_every(seconds=86400)
+@repeat_every(seconds=60)
 def get_daily_news():
   try:
     exec_newsdata_scrape()
@@ -35,7 +36,7 @@ def exec_scrape():
 
     if task == 'FAILED':
       return JSONResponse(
-        status_code=status.HTTP_200_OK,
+        status_code=status.HTTP_200_OK, 
         content={
           "message": "TASK_SUCCEFFSULLY_EXECUTED"
         }
