@@ -113,8 +113,9 @@ def exec_newsdata_scrape():
 
   headers = {'Content-Type': 'application/json'}
   
-  response = requests.post('http://localhost:6565/api/v1/news/insert', json=data, headers=headers)
+  response = requests.post('http://127.0.0.1:8000/api/v1/news/insert', json=data, headers=headers)
 
+  print(response)
   if response.status_code == "200":
     return 'SUCCESS'
   else:
