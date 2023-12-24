@@ -10,21 +10,21 @@ app = FastAPI()
   execute web scraping function
   and generate CSV
 """
-# @app.on_event('startup')
-# # @repeat_every(seconds=86400)
-# @repeat_every(seconds=60)
-# def get_daily_news():
-#   try:
-#     task = exec_newsdata_scrape()
+@app.on_event('startup')
+# @repeat_every(seconds=86400)
+@repeat_every(seconds=60)
+def get_daily_news():
+  try:
+    task = exec_newsdata_scrape()
 
-#     print (task)
+    print (task)
 
-#     if task == "FAILED":
-#       print('FAILED_TO_SCRAPED_DATA')
-#     else:
-#       print('SUCCESSFULLY_SCRAPED_DATA')
-#   except:
-#     print('SOMETHING_WENT_WRONG')
+    if task == "FAILED":
+      print('FAILED_TO_SCRAPED_DATA')
+    else:
+      print('SUCCESSFULLY_SCRAPED_DATA')
+  except:
+    print('SOMETHING_WENT_WRONG')
 
 @app.get('/')
 def index():
